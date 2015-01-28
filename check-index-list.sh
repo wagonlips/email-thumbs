@@ -16,6 +16,7 @@ if diff /tmp/current-html.list $THUMBSDIR/index_files/email-html.list >/dev/null
 
 fi
 
-#while read line
-#  do echo $(stat -c %Y $line)
-#done < email-html.list
+# record the modification times of each file
+while read line
+  do echo $(stat -c %Y-%n $line) >> $THUMBSDIR/file-times.list
+done < $THUMBSDIR/index_files/email-html.list
