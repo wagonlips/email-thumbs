@@ -1,10 +1,14 @@
 #!/bin/bash
+#
+# this is script 2 of 3
+#
 # set the location
 THUMBSDIR=`pwd -P`
 # first delete the old file
 rm $THUMBSDIR/index_files/thumbs-url.list
 # then make a new one
 while read line
+# the file "email-html.list" must be generated first by the "check-index-list.sh" script
 # we're using THUMBSDIR to mask the actual directory location and to aid in portability
 # the sed instruction below 's|.{40}|...' will need to be changed if the HTML files' location changes
   do echo $line | sed -r 's|.{40}|dev-misc.peets.com|' >> $THUMBSDIR/index_files/thumbs-url.list

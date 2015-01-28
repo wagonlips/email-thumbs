@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# this is script 1 of 3
+#
 THUMBSDIR=`pwd -P`
 find $THUMBSDIR/ -name \*.html | sort -r | sed '/index.html/d' > /tmp/current-html.list
 
