@@ -5,7 +5,9 @@ THUMBSDIR=`pwd -P`
 rm $THUMBSDIR/index_files/thumbs-url.list
 # then make a new one
 while read line
-  do echo $line | sed 's|$THUMBSDIR/|dev-misc.peets.com/|' >> $THUMBSDIR/index_files/thumbs-url.list
+# we're using THUMBSDIR to mask the actual directory location and to aid in portability
+# the sed instruction below 's|.{40}|...' will need to be changed if the HTML files' location changes
+  do echo $line | sed -r 's|.{40}|dev-misc.peets.com|' >> $THUMBSDIR/index_files/thumbs-url.list
 done < $THUMBSDIR/index_files/email-html.list
 
 echo "main file done"
@@ -18,11 +20,14 @@ awk -F, '/EMAIL_2012/' $THUMBSDIR/index_files/thumbs-url.list > $THUMBSDIR/index
 awk -F, '/EMAIL_2011/' $THUMBSDIR/index_files/thumbs-url.list > $THUMBSDIR/index_files/2011.list
 
 echo "mini files done!"
-exit 0
+# exit 0
 
 # then run the thumbs command on the mini lists
-while read LINE
-  do phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $LINE
-done < $THUMBSDIR/index_files/thumbs-url.list
-
+for i in $THUMBSDIR/index_files/2015.list $THUMBSDIR/index_files/2014.list $THUMBSDIR/index_files/2013.list $THUMBSDIR/index_files/2012.list $THUMBSDIR/index_files/2011.list
+  do
+    echo "Rendering thumbs for" $i
+    while read LINE
+      do phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $LINE
+      done < $i
+  done
 exit 0
