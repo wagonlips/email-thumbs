@@ -34,4 +34,13 @@ for i in $THUMBSDIR/index_files/2015.list $THUMBSDIR/index_files/2014.list $THUM
       do phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $LINE
       done < $i
   done
+
+echo "PNGs made"
+
+for i in $THUMBSDIR/images/*.png
+  do convert $i -resize 250 $i.jpg
+  done
+
+echo "JPGs made"
+
 exit 0
