@@ -19,11 +19,10 @@ INDEX_HEAD
 for i in index_files/2015.list index_files/2014.list index_files/2013.list index_files/2012.list index_files/2011.list
   do
     echo "<div class=\"year-container\" id=\"t-`basename $i`\"> `basename $i`" >> index.html
-    echo "<div class=\"hidden\">" >> index.html
     while read line
       do 
         caption=$(basename $line)
-        thumb_url="$(echo $line | tr "/" "_").png"
+        thumb_url="$(echo $line | tr "/" "_").png.jpg"
 cat >> index.html <<INDEX_BODY
 <div class="thumb">
   <div class="caption">$caption</div>
@@ -31,7 +30,7 @@ cat >> index.html <<INDEX_BODY
 </div>
 INDEX_BODY
       done < $i
-    echo "</div>" >> index.html
+    echo "<div style=\"clear:both;\">&nbsp;</div>" >> index.html
     echo "</div>" >> index.html
   done
 cat >> index.html <<INDEX_FOOT
