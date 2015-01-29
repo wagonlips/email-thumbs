@@ -11,14 +11,22 @@ cat > index.html <<INDEX_HEAD
 .year-container {border:1px solid green;}
 .thumb {float:left;text-align:center;}
 .hidden {display:none;}
+.visible {display:block;}
+#t-2011-list {border:1px solid red;}
+#t-2012-list {border:1px solid blue;}
+#t-2013-list {border:1px solid pink;}
+#t-2014-list {border:1px solid yellow;}
+#t-2015-list {border:1px solid orange;}
 </style>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
 INDEX_HEAD
 
 for i in index_files/2015.list index_files/2014.list index_files/2013.list index_files/2012.list index_files/2011.list
   do
-    echo "<div class=\"year-container\" id=\"t-`basename $i`\"> `basename $i`" >> index.html
+    echo "<div class=\"year-container\" id=\"c-`basename $i | tr "." "-"`\"> `basename $i`" >> index.html
+    echo "<div id=\"t-`basename $i | tr "." "-"`\">" >> index.html
     while read line
       do 
         caption=$(basename $line)
@@ -32,8 +40,19 @@ INDEX_BODY
       done < $i
     echo "<div style=\"clear:both;\">&nbsp;</div>" >> index.html
     echo "</div>" >> index.html
+    echo "</div>" >> index.html
   done
 cat >> index.html <<INDEX_FOOT
+<script>
+jQuery.noConflict();
+jQuery('#c-2011-list').click(function()  {
+  if (jQuery('#t-2011-list').css('display')=='none'){
+    jQuery('#t-2011-list').css('display', 'block');
+  } else {
+    jQuery('#t-2011-list').css('display', 'none');
+  }
+}); 
+</script>
 </body>
 </html>
 INDEX_FOOT
