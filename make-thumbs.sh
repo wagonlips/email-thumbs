@@ -10,7 +10,8 @@ rm $THUMBSDIR/index_files/thumbs-url.list
 while read line
 # the file "email-html.list" must be generated first by the "check-index-list.sh" script
 # we're using THUMBSDIR to mask the actual directory location and to aid in portability
-# the sed instruction below 's|.{40}|...' will need to be changed if the HTML files' location changes
+# the sed instruction below 's|.{40}|...' simply swaps the first 40 characters from each
+# line with the domain and will need to be changed if the HTML files' location changes
   do echo $line | sed -r 's|.{40}|dev-misc.peets.com|' >> $THUMBSDIR/index_files/thumbs-url.list
 done < $THUMBSDIR/index_files/email-html.list
 
@@ -24,18 +25,24 @@ awk -F, '/EMAIL_2012/' $THUMBSDIR/index_files/thumbs-url.list > $THUMBSDIR/index
 awk -F, '/EMAIL_2011/' $THUMBSDIR/index_files/thumbs-url.list > $THUMBSDIR/index_files/2011.list
 
 echo "mini files done!"
-# exit 0
 
 # then run the thumbs command on the mini lists
 for i in $THUMBSDIR/index_files/2015.list $THUMBSDIR/index_files/2014.list $THUMBSDIR/index_files/2013.list $THUMBSDIR/index_files/2012.list $THUMBSDIR/index_files/2011.list
   do
     echo "Rendering thumbs for" $i
+# Only make thumbs for those HTML files modified within the last 30 days.
     while read LINE
-      do phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $LINE
+      do
+        if test ! `find $LINE -mtime +30` 
+        then
+          phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $LINE
+        fi
       done < $i
   done
 
 echo "PNGs made"
+
+exit 0
 
 for i in $THUMBSDIR/images/*.png
   do convert $i -resize 250 $i.jpg
