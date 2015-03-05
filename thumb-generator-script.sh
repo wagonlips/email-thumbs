@@ -5,12 +5,11 @@ THUMBSDIR=`pwd -P`
 echo $THUMBSDIR
 # Check for changes in directory.
 if [[ -n $(find $THUMBSDIR -mtime -14 -name \*.html) ]]
-# If new files are found then write the new list over the old and make a new index file.
+# If new files are found then write the new list over the old.
 then
-#  echo "found!"
   find $THUMBSDIR/ -name \*.html | sort -r | sed '/index.html/d' > $THUMBSDIR/index_files/email-html.list
 else
-#  echo "not found!"
+# Otherwise, exit.
   exit 0
 fi
 
@@ -38,24 +37,20 @@ awk -F, '/EMAIL_2011/' $THUMBSDIR/index_files/thumbs-url.list > $THUMBSDIR/index
 
 echo "mini files done!"
 
-# then run the thumbs command on the mini lists
-# for i in $THUMBSDIR/index_files/2015.list $THUMBSDIR/index_files/2014.list $THUMBSDIR/index_files/2013.list $THUMBSDIR/index_files/2012.list $THUMBSDIR/index_files/2011.list
-#while read LINE1
-#  do
 # Only make thumbs for those HTML files modified within the last 30 days.
-    while read SERVERURLS
-      do
-        if test ! `find $SERVERURLS -mtime +5` 
-        then
-          echo "Rendering thumbs for" $SERVERURLS
-          WEBURLS=$(sed -r 's|.{40}|dev-misc.peets.com|' <<< $SERVERURLS)
-          phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $WEBURLS
-        fi
-      done < $THUMBSDIR/index_files/email-html.list
-#      done
+while read SERVERURLS
+  do
+    if test ! `find $SERVERURLS -mtime +5` 
+    then
+      echo "Rendering thumbs for" $SERVERURLS
+      WEBURLS=$(sed -r 's|.{40}|dev-misc.peets.com|' <<< $SERVERURLS)
+      phantomjs $THUMBSDIR/render_multi_url_email_thumbs.js $WEBURLS
+    fi
+  done < $THUMBSDIR/index_files/email-html.list
 
 echo "PNGs made"
 
+# Convert PNGs to JPGs
 for i in $THUMBSDIR/images/*.png
   do
     if test ! `find $i -mtime +1` 
