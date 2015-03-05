@@ -4,7 +4,11 @@
 # 
 #
 THUMBSDIR=`pwd -P`
-i=$THUMBSDIR/index_files/2015.list
-    while read LINE
-      do echo $LINE
-      done < $i
+i=$THUMBSDIR/index_files/email-html.list
+while read LINE
+  do
+    if test ! `find $LINE -mtime +30` 
+    then
+      echo $LINE
+    fi
+  done < $i
